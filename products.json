@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1,
+    "name": "Laptop",
+    "description": "High-performance laptop for all your needs.",
+    "price": "390 SR "
+  },
+  {
+    "id": 2,
+    "name": "Smartphone",
+    "description": "Latest smartphone with advanced features.",
+    "price": "1000 SR "
+  },
+  {
+    "id": "1699718842586",
+    "name": "Console Game ",
+    "description": "Next-gen gaming console for immersive gameplay.",
+    "price": "350 SR"
+  }
+]
