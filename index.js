@@ -80,12 +80,12 @@ http
           body = body + chunk;
         });
         req.on("end", () => {
-          const data = parse(body);
+          const { name, description, price } = parse(body);
           const newProducts = {
             id: new Date().getTime().toString(),
-            name: data.name,
-            description: data.description,
-            price: data.price,
+            name,
+            description,
+            price,
           };
 
           products.push(newProducts);

@@ -24,55 +24,74 @@ let products = [
   },
 ];
 
-const handleError = (res, statusCode, massage) => {
-  res.status(statusCode).send(massage);
+// Function to handle errors asynchronously
+const handleError = async (res, statusCode, message) => {
+  try {
+    await res.status(statusCode).send(message);
+  } catch (error) {
+    console.log("Error:", error);
+    res.status(500).send("Server Error");
+  }
 };
 
-app.get("/", (req, res) => {
+// Root path ("/") GET request
+app.get("/", async (req, res) => {
   try {
     res.status(200).send("<h1>Hello, World</h1>");
   } catch {
-    handleError(res, 500, "Server Error");
+    await handleError(res, 500, "Server Error");
   }
 });
 
-app.post("/", (req, res) => {
+// Root path ("/") POST request
+app.post("/", async (req, res) => {
   try {
     const data = req.body;
-    console.log("Received Data :", data);
+    console.log("Received Data:", data);
     res.status(200).send("Data is Received and logged");
   } catch {
-    handleError(res, 500, "Server Error");
+    await handleError(res, 500, "Server Error");
   }
 });
 
-app.get("/products", (req, res) => {
+// "/products" GET request
+app.get("/products", async (req, res) => {
   try {
     res.status(200).json(products);
   } catch {
-    handleError(res, 500, "Server Error");
-  }
-});
-app.post("/products", (req, res) => {
-  try {
-    const data = req.body;
-    const newProducts = {
-      id: new Date().getTime().toString(),
-      name: data.name,
-      description: data.description,
-      price: data.price,
-    };
-    const existingProducts = JSON.parse(
-      fs.readFileSync("products.json", "utf8")
-    );
-    existingProducts.push(newProducts);
-    fs.writeFileSync("products.json", JSON.stringify(existingProducts));
-    res.status(201).send("New Product is Created");
-  } catch {
-    handleError(res, 500, "Server Error");
+    await handleError(res, 500, "Server Error");
   }
 });
 
+// "/products" POST request
+app.post("/products", async (req, res) => {
+  try {
+    const { name, description, price } = req.body;
+    const newProduct = {
+      id: new Date().getTime().toString(),
+      name,
+      description,
+      price,
+    };
+
+    // Read existing products from the JSON file
+    const existingProducts = JSON.parse(
+      fs.readFileSync("products.json", "utf8")
+    );
+
+    // Push the new product to the existing products array
+    existingProducts.push(newProduct);
+
+    // Write the updated array back to the JSON file
+    fs.writeFileSync("products.json", JSON.stringify(existingProducts));
+
+    res.status(201).send("New Product is Created");
+  } catch {
+    await handleError(res, 500, "Server Error");
+  }
+});
+
+// Start the server
 app.listen(PORT, () => {
   console.log(`Server running at http://127.0.0.1:${PORT}/`);
 });
